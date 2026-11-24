@@ -22,7 +22,7 @@ public class ScreenGame implements Screen {
 
     @Override
     public void show() {
-
+        isGameOver = false;
     }
 
     @Override
@@ -32,18 +32,33 @@ public class ScreenGame implements Screen {
         }
 
         bird.fly();
+        if (!bird.isInField()) {
+            System.out.println("not in field");
+            isGameOver = true;
+        }
+        for (Tube tube : tubes) {
+            tube.move();
+            if (tube.isHit(bird)) {
+                System.out.println("hit");
+                isGameOver = true;
+            }
+
+        }
 
         ScreenUtils.clear(1, 0, 0, 1);
-
         myGdxGame.camera.update();
         myGdxGame.batch.setProjectionMatrix(myGdxGame.camera.combined);
 
         myGdxGame.batch.begin();
-        for (Tube tube : tubes) tube.move();
-        for (Tube tube : tubes) tube.draw(myGdxGame.batch);
+        for (Tube tube : tubes) {
+            tube.draw(myGdxGame.batch);
+        }
         bird.draw(myGdxGame.batch);
         myGdxGame.batch.end();
     }
+
+    private boolean isGameOver;
+
 
 
     @Override

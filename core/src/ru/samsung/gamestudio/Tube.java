@@ -23,6 +23,15 @@ public class Tube {
     private Texture textureUpperTube;
     private Texture textureDownTube;
 
+    public boolean isHit(Bird bird) {
+        if (bird.getX() + bird.getWidth() >= x && bird.getX() <= x + width && bird.getY() <= gapY - gapHeight / 2){
+            return true;
+        }
+        if (bird.getY() + bird.getHeight() >= gapY + gapHeight / 2 && bird.getX() + bird.getWidth() >= x && bird.getX() <= x + width)
+            return true;
+        return false;
+    }
+
     public Tube(int tubeCount, int tubeIdx) {
         random = new Random();
 
