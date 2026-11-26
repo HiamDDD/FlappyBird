@@ -15,6 +15,7 @@ public class ScreenGame implements Screen {
     PointCounter pointCounter;
     MyGdxGame myGdxGame;
 
+    private MovingBackground background;
     private int tubeCount = 3;
     private Tube[] tubes;
     int gamePoints = 0;
@@ -24,6 +25,7 @@ public class ScreenGame implements Screen {
         this.myGdxGame = myGdxGame;
         bird = new Bird(10, SCR_HEIGHT / 2, 10, 200, 150);
         pointCounter = new PointCounter(SCR_WIDTH - pointCounterMarginRight, SCR_HEIGHT - pointCounterMarginTop);
+        background = new MovingBackground();
         initTubes();
     }
 
@@ -39,7 +41,7 @@ public class ScreenGame implements Screen {
         if (Gdx.input.justTouched()) {
             bird.onClick();
         }
-
+        background.move();
         bird.fly();
         if (!bird.isInField()) {
             System.out.println("not in field");
@@ -62,6 +64,9 @@ public class ScreenGame implements Screen {
         myGdxGame.batch.setProjectionMatrix(myGdxGame.camera.combined);
 
         myGdxGame.batch.begin();
+        background.draw(myGdxGame.batch);
+        bird.draw(myGdxGame.batch);
+        for (Tube tube : tubes) tube.draw(myGdxGame.batch);
         for (Tube tube : tubes) {
             tube.draw(myGdxGame.batch);
         }
