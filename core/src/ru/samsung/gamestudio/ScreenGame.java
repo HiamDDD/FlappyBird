@@ -1,5 +1,8 @@
 package ru.samsung.gamestudio;
 
+import static ru.samsung.gamestudio.MyGdxGame.SCR_HEIGHT;
+import static ru.samsung.gamestudio.MyGdxGame.SCR_WIDTH;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
@@ -7,26 +10,32 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class ScreenGame implements Screen {
 
+    final int pointCounterMarginTop = 60;
+    final int pointCounterMarginRight = 400;
+    PointCounter pointCounter;
     MyGdxGame myGdxGame;
 
     private int tubeCount = 3;
     private Tube[] tubes;
+    int gamePoints = 0;
     Bird bird;
 
     ScreenGame(MyGdxGame myGdxGame) {
         this.myGdxGame = myGdxGame;
-        bird = new Bird(0, MyGdxGame.SCR_HEIGHT / 2, 10, 250, 200);
-
+        bird = new Bird(10, SCR_HEIGHT / 2, 10, 200, 150);
+        pointCounter = new PointCounter(SCR_WIDTH - pointCounterMarginRight, SCR_HEIGHT - pointCounterMarginTop);
         initTubes();
     }
 
     @Override
     public void show() {
+        gamePoints = 0;
         isGameOver = false;
     }
 
     @Override
     public void render(float delta) {
+
         if (Gdx.input.justTouched()) {
             bird.onClick();
         }
@@ -41,8 +50,11 @@ public class ScreenGame implements Screen {
             if (tube.isHit(bird)) {
                 System.out.println("hit");
                 isGameOver = true;
+            } else if (tube.needAddPoint(bird)) {
+                gamePoints += 1;
+                tube.setPointReceived();
+                System.out.println(gamePoints);
             }
-
         }
 
         ScreenUtils.clear(1, 0, 0, 1);
@@ -54,6 +66,7 @@ public class ScreenGame implements Screen {
             tube.draw(myGdxGame.batch);
         }
         bird.draw(myGdxGame.batch);
+        pointCounter.draw(myGdxGame.batch, gamePoints);
         myGdxGame.batch.end();
     }
 

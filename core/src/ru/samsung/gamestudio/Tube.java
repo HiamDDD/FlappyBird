@@ -23,6 +23,12 @@ public class Tube {
     private Texture textureUpperTube;
     private Texture textureDownTube;
 
+    private boolean isPointReceived;
+
+    public boolean needAddPoint(Bird bird) {
+        return bird.getX() > x + width && !isPointReceived;
+    }
+
     public boolean isHit(Bird bird) {
         if (bird.getX() + bird.getWidth() >= x && bird.getX() <= x + width && bird.getY() <= gapY - gapHeight / 2){
             return true;
@@ -53,10 +59,14 @@ public class Tube {
         textureDownTube.dispose();
     }
 
+    public void setPointReceived() {
+        isPointReceived = true;
+    }
+
     public void move() {
         x -= speed;
-
         if (x < -width) {
+            isPointReceived = false;
             x = SCR_WIDTH + distanceBetweenTubes;
             gapY = gapHeight / 2 + padding + random.nextInt(SCR_HEIGHT - 2 * (padding + gapHeight / 2));
         }
